@@ -17,16 +17,16 @@ RUN apt-get install -y libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev lib
 RUN apt-get autoclean autoremove
 
 # clone opencv
-    # cd opencv_contrib && git checkout $OPENCV_VER && cd .. && \
-RUN git clone https://github.com/opencv/opencv.git && \
-    git clone https://github.com/opencv/opencv_contrib.git
+RUN git clone https://github.com/opencv/opencv.git -b $OPENCV_VER && \
+    git clone https://github.com/opencv/opencv_contrib.git -b $OPENCV_VER
  
-RUN cd /opencv && git checkout $OPENCV_VER && cd / && ls && pwd
+#RUN cd /opencv && git checkout $OPENCV_VER && cd /
+#RUN cd /opencv_contrib && git checkout $OPENCV_VER && cd /
     
 # build
 RUN mkdir /opencv/build && cd /opencv/build && \
     cmake \
-      -D CMAKE_BUILD_TYPE=Release \
+      -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=/usr/local \
       -D INSTALL_C_EXAMPLES=OFF \
       -D INSTALL_PYTHON_EXAMPLES=OFF \
@@ -38,8 +38,17 @@ RUN mkdir /opencv/build && cd /opencv/build && \
       -D BUILD_DOCS=OFF \
       -D BUILD_TESTS=OFF \
       -D BUILD_PERF_TESTS=OFF \
+      -D BUILD_ZLIB=OFF \
       -D WITH_OPENGL=OFF \
-      -D OPENCV_GENERATE_PKGCONFIG=ON .. && \
+      -D WITH_TBB=ON \
+      -D WITH_OPENMP=ON \
+      -D WITH_IPP=ON \
+      -D WITH_CSTRIPES=ON \
+      -D WITH_OPENCL=ON \
+      -D WITH_V4L=ON \
+      -D WITH_VTK=ON \
+      -D OPENCV_GENERATE_PKGCONFIG=ON \
+      -D OPENCV_PC_FILE_NAME=opencv.pc .. && \
     make -j$CORES && \
     make install && \
     ldconfig && \
@@ -47,7 +56,4 @@ RUN mkdir /opencv/build && cd /opencv/build && \
     rm -rf /opencv /opencv_contrib
 
 WORKDIR /run
-
-CMD ["bash"]
     
-
