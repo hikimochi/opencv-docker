@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:rolling
 MAINTAINER rhikimochi
 
 ENV OPENCV_VERSION 4.1.2
@@ -7,13 +7,11 @@ ENV NUM_CORES 4
 # update
 RUN apt-get -qqy update
 # install packages
-RUN apt-get -y install wget unzip curl git
+RUN apt-get -y install wget unzip curl git cmake pkg-config
 # compiler
 RUN apt-get -y install build-essential
 # required
-RUN apt-get -y install cmake \
-                       git \
-                       pkg-config \
+RUN apt-get -y install pkg-config \
                        libatlas-base-dev \
                        libavcodec-dev \
                        libavformat-dev \
